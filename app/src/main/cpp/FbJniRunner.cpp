@@ -33,7 +33,7 @@ std::string FbJniRunner::nativeEval(alias_ref<FbJniRunner::javaobject> runner,
   return res;
 }
 
-__attribute__((visibility("default"))) jint JNI_OnLoad(JavaVM *vm, void *) {
+jint JNI_OnLoad(JavaVM *vm, void *) {
   return initialize(vm, [] {
     facebook::jni::log_::loge("JNI_OnLoad", "register");
     FbJniRunner::registerNatives();
