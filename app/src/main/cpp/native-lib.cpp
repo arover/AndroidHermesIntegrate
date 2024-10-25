@@ -15,9 +15,9 @@ Java_com_example_hermesandroidintegrate_EvLoop_evalJavascriptScript(
 
 extern "C" JNIEXPORT jint JNICALL
 Java_com_example_hermesandroidintegrate_Runner_eval(JNIEnv *env, jobject,
-                                                    jstring script,
-                                                    jstring name) {
-  const char *nativeScriptChars = env->GetStringUTFChars(script, 0);
-  std::string scriptName(env->GetStringUTFChars(name, 0));
-  return runner_eval(nativeScriptChars, scriptName);
+                                                    jstring script) {
+  const char *scriptBuffer = env->GetStringUTFChars(script, nullptr);
+  auto res = runner_eval(scriptBuffer, "Runner_eval_script");
+  env->ReleaseStringUTFChars(script, scriptBuffer);
+  return res;
 }

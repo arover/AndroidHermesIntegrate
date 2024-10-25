@@ -10,10 +10,10 @@ class Runner {
     """.trimIndent()
 
     init {
-        eval(script, "hello")
+        eval(script)
     }
 
-    private external fun eval(script: String, name: String): Int
+    private external fun eval(script: String): Int
 
 
 }
