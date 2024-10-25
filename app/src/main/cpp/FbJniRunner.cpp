@@ -4,26 +4,18 @@
 
 #include "runner.h"
 #include <fbjni/fbjni.h>
+#include <FbJniRunner.h>
 
 using namespace facebook::jni;
 
-struct FbJniRunner : public JavaClass<FbJniRunner> {
-public:
-  static constexpr auto kJavaDescriptor =
-      "Lcom/example/hermesandroidintegrate/FbJniRunner;";
+void FbJniRunner::registerNatives() {
+  javaClassStatic()->registerNatives(
+      {makeNativeMethod("nativeEval", FbJniRunner::nativeEval),
+       makeNativeMethod("getStringHello", FbJniRunner::getStringHello)});
+}
 
-  static void registerNatives() {
-    javaClassStatic()->registerNatives(
-        {makeNativeMethod("nativeEval", FbJniRunner::nativeEval)});
-  }
-
-private:
-  static std::string nativeEval(alias_ref<FbJniRunner::javaobject> runner,
-                                const alias_ref<jstring>& script);
-};
-
-std::string FbJniRunner::nativeEval(alias_ref<FbJniRunner::javaobject> runner,
-                                    const alias_ref<jstring>& script) {
+std::string FbJniRunner::nativeEval(alias_ref<FbJniRunner::javaobject>,
+                              const alias_ref<jstring> &script) {
   auto env = Environment::current();
   const char *nativeScript = env->GetStringUTFChars(script.get(), nullptr);
 
@@ -33,9 +25,6 @@ std::string FbJniRunner::nativeEval(alias_ref<FbJniRunner::javaobject> runner,
   return res;
 }
 
-jint JNI_OnLoad(JavaVM *vm, void *) {
-  return initialize(vm, [] {
-    facebook::jni::log_::loge("JNI_OnLoad", "register");
-    FbJniRunner::registerNatives();
-  });
+std::string FbJniRunner::getStringHello(alias_ref<FbJniRunner::javaobject>) {
+  return "Hello";
 }

@@ -26,7 +26,12 @@ class FbJniRunner {
         nativeEval(scriptError).let {
             Log.d(TAG, "init: $it")
         }
+
+        getStringHello().let {
+            Log.d(TAG, "get string from natve: $it")
+        }
     }
 
-    external fun nativeEval(script: String): String
+    private external fun nativeEval(script: String): String
+    private external fun getStringHello(): String
 }

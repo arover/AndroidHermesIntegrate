@@ -30,6 +30,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         runner.cpp
 #        evloop.cpp
         FbJniRunner.cpp
+        OnLoad.cpp
 )
 
 include_directories(include)
@@ -42,7 +43,6 @@ add_library(hermes SHARED IMPORTED)
 set_target_properties(hermes PROPERTIES IMPORTED_LOCATION
         ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libhermes.so
 )
-
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
