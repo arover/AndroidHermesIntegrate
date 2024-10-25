@@ -29,6 +29,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         native-lib.cpp
         runner.cpp
 #        evloop.cpp
+        FbJniRunner.cpp
 )
 
 include_directories(include)

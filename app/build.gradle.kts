@@ -55,11 +55,7 @@ android {
 
 dependencies {
 
-//    implementation(fileTree("libs") {
-//        include("*.aar")
-//    })
-
-// https://mvnrepository.com/artifact/com.facebook.fbjni/fbjni
+    // https://mvnrepository.com/artifact/com.facebook.fbjni/fbjni
     implementation(libs.fbjni)
 
     implementation(libs.androidx.core.ktx)

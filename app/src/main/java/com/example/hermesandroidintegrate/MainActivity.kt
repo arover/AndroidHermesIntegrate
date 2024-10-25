@@ -11,6 +11,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(initView())
         Runner()
+        FbJniRunner()
     }
 
     private fun initView() =

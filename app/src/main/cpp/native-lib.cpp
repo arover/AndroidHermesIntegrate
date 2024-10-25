@@ -19,5 +19,5 @@ Java_com_example_hermesandroidintegrate_Runner_eval(JNIEnv *env, jobject,
   const char *scriptBuffer = env->GetStringUTFChars(script, nullptr);
   auto res = runner_eval(scriptBuffer, "Runner_eval_script");
   env->ReleaseStringUTFChars(script, scriptBuffer);
-  return res;
+  return 0;
 }

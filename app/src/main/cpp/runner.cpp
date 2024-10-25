@@ -34,7 +34,7 @@ void registerNatives(jsi::Runtime &rt) {
                           jsi::Array::createWithElements(rt, "abc", "bcd"));
 }
 
-int runner_eval(const char *script, std::string name) {
+std::string runner_eval(const char *script, std::string name) {
 
   // Create the Hermes runtime.
   auto runtime = facebook::hermes::makeHermesRuntime();
@@ -42,21 +42,19 @@ int runner_eval(const char *script, std::string name) {
   registerNatives(*runtime);
 
   // Execute some JS.
-  int status = 0;
+  std::string res;
   try {
-    runtime->evaluateJavaScript(std::make_unique<jsi::StringBuffer>(script),
-                                name);
+    auto value = runtime->evaluateJavaScript(
+        std::make_unique<jsi::StringBuffer>(script), name);
+    res = value.toString(*runtime).utf8(*runtime);
   } catch (jsi::JSError &e) {
     // Handle JS exceptions here.
     jni::log_::loge(TAG, "JS Exception: %s", e.getStack().c_str());
-    std::cerr << "JS Exception: " << e.getStack() << std::endl;
-    status = 1;
+    res = e.getStack();
   } catch (jsi::JSIException &e) {
     // Handle JSI exceptions here.
     jni::log_::loge(TAG, "JSI Exception: %s", e.what());
-    std::cerr << "JSI Exception: " << e.what() << std::endl;
-    status = 1;
+    res = e.what();
   }
-
-  return status;
+  return res;
 }

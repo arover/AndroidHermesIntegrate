@@ -6,4 +6,4 @@
 
 #include <iostream>
 
-int runner_eval(const char *script, std::string name);
+std::string runner_eval(const char *script, std::string name);
