@@ -27,9 +27,9 @@ project("hermes-android")
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         runner.cpp
-#        evloop.cpp
         FbJniRunner.cpp
         OnLoad.cpp
+        HermesRuntime.cpp
 )
 
 include_directories(include)

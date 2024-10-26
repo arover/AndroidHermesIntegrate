@@ -6,7 +6,7 @@ import com.facebook.soloader.nativeloader.SystemDelegate
 object HermesAndroid {
 
     fun load() {
-        System.loadLibrary("hermes-android")
         NativeLoader.init(SystemDelegate())
+        NativeLoader.loadLibrary("hermes-android")
     }
 }

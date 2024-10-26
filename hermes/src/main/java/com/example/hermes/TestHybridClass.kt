@@ -13,6 +13,8 @@ class TestHybridClass : NativeRunner {
         return "HybridClass: ${nativeInvoke(this)}"
     }
 
+    operator fun invoke(obj: Any): Any = nativeInvoke(obj)
+
     private external fun nativeInvoke(data: Any): Any
 
     private external fun initHybridData(): HybridData

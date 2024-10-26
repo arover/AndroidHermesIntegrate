@@ -2,8 +2,9 @@
 // Created by ikvarxt on 10/25/2024.
 //
 
-#include "TestHybridClass.h"
 #include "FbJniRunner.h"
+#include "HermesRuntime.h"
+#include "TestHybridClass.h"
 #include <fbjni/fbjni.h>
 #include <jni.h>
 
@@ -14,5 +15,6 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *) {
     facebook::jni::log_::loge("JNI_OnLoad", "register native methods");
     FbJniRunner::registerNatives();
     TestHybridClass::registerNatives();
+    HermesRuntime::registerNatives();
   });
 }

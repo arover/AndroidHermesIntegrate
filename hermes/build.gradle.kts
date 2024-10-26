@@ -37,7 +37,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
@@ -47,6 +46,12 @@ android {
     // enable prefab to let .so packed into apk
     buildFeatures {
         prefab = true
+    }
+    packaging {
+        jniLibs.pickFirsts += listOf(
+            "**/libc++_shared.so",
+            "**/libfbjni.so"
+        )
     }
 }
 

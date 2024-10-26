@@ -16,9 +16,7 @@ struct TestHybridClass : public HybridClass<TestHybridClass, NativeRunner> {
   static auto constexpr *kJavaDescriptor =
       "Lcom/example/hermes/TestHybridClass;";
 
-  TestHybridClass(alias_ref<jclass>) {
-    log_::loge("Hybrid", "constructor");
-  }
+  TestHybridClass(alias_ref<jclass>) { log_::loge("Hybrid", "constructor"); }
 
   static void registerNatives() {
     registerHybrid({
