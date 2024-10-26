@@ -26,5 +26,5 @@ std::string FbJniRunner::nativeEval(alias_ref<FbJniRunner::javaobject>,
 }
 
 std::string FbJniRunner::getStringHello(alias_ref<FbJniRunner::javaobject>) {
-  return "Hello";
+  return "Hello from FbJniRunner";
 }

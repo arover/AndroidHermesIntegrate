@@ -1,4 +1,4 @@
-package com.example.hermesandroidintegrate
+package com.example.hermes
 
 class EvLoop {
 

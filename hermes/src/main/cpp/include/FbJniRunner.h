@@ -11,8 +11,8 @@ using namespace facebook::jni;
 struct FbJniRunner : public JavaClass<FbJniRunner> {
 
 public:
-  static constexpr const char * kJavaDescriptor =
-      "Lcom/example/hermesandroidintegrate/FbJniRunner;";
+  static constexpr const char *kJavaDescriptor =
+      "Lcom/example/hermes/FbJniRunner;";
 
   static void registerNatives();
 
@@ -22,4 +22,3 @@ private:
 
   static std::string getStringHello(alias_ref<FbJniRunner::javaobject>);
 };
-

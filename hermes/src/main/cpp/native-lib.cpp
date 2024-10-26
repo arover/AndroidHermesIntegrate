@@ -10,11 +10,11 @@ Java_com_example_hermesandroidintegrate_MainActivity_stringFromJNI(
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_example_hermesandroidintegrate_EvLoop_evalJavascriptScript(
+Java_com_example_hermes_EvLoop_evalJavascriptScript(
     JNIEnv *env, jobject, jstring script) {}
 
 extern "C" JNIEXPORT jint JNICALL
-Java_com_example_hermesandroidintegrate_Runner_eval(JNIEnv *env, jobject,
+Java_com_example_hermes_Runner_eval(JNIEnv *env, jobject,
                                                     jstring script) {
   const char *scriptBuffer = env->GetStringUTFChars(script, nullptr);
   auto res = runner_eval(scriptBuffer, "Runner_eval_script");

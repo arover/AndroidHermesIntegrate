@@ -1,20 +1,27 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
-    namespace = "com.example.hermesandroidintegrate"
+    namespace = "com.example.hermes"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.hermesandroidintegrate"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+
+        ndk {
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
+        @Suppress("UnstableApiUsage")
+        externalNativeBuild {
+            cmake {
+                arguments("-DANDROID_STL=c++_shared")
+            }
+        }
     }
 
     buildTypes {
@@ -30,22 +37,26 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    packaging {
-        jniLibs.pickFirsts += listOf(
-            "**/libc++_shared.so",
-            "**/libfbjni.so"
-        )
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
+    }
+    // enable prefab to let .so packed into apk
+    buildFeatures {
+        prefab = true
     }
 }
 
 dependencies {
-
-    implementation(project(":hermes"))
+    // https://mvnrepository.com/artifact/com.facebook.fbjni/fbjni
+    implementation(libs.fbjni)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

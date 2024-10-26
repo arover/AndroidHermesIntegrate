@@ -1,4 +1,6 @@
-package com.example.hermesandroidintegrate
+@file:Suppress("KotlinJniMissingFunction")
+
+package com.example.hermes
 
 class Runner {
 
@@ -14,6 +16,4 @@ class Runner {
     }
 
     private external fun eval(script: String): Int
-
-
 }

@@ -1,4 +1,6 @@
-package com.example.hermesandroidintegrate
+@file:Suppress("KotlinJniMissingFunction")
+
+package com.example.hermes
 
 import android.util.Log
 
@@ -31,6 +33,8 @@ class FbJniRunner {
             Log.d(TAG, "get string from natve: $it")
         }
     }
+
+    val res:String get() = getStringHello()
 
     private external fun nativeEval(script: String): String
     private external fun getStringHello(): String
