@@ -4,13 +4,29 @@
 
 #include "HermesRuntime.h"
 #include <fbjni/fbjni.h>
+#include <hermes/hermes.h>
+#include <jsi/jsi.h>
 
-using namespace facebook::jni;
+using namespace facebook;
 
-local_ref<jobject>
-HermesRuntime::nativeEvaluateJavascript(alias_ref<jclass>,
-                                        alias_ref<jstring> script) {
-  auto env = Environment::current();
+const char *TAG = "HermesRuntime";
 
-  return make_local(script);
+HermesRuntime::HermesRuntime() {
+  rt = facebook::hermes::makeHermesRuntime();
+  log_::loge(TAG, "HermesRuntime construct rt=%u", &rt);
+}
+
+jni::local_ref<jobject>
+HermesRuntime::nativeEvaluateJavascript(jni::alias_ref<jstring> script) {
+  auto env = jni::Environment::current();
+  const char *nativeScript = env->GetStringUTFChars(script.get(), nullptr);
+  auto value = rt->evaluateJavaScript(
+      std::make_unique<jsi::StringBuffer>(nativeScript), "eval");
+
+  if (value.isUndefined()) {
+    return make_local(env->NewStringUTF("undefined"));
+  } else {
+    auto res = env->NewStringUTF(value.asString(*rt).utf8(*rt).c_str());
+    return make_local(res);
+  }
 }

@@ -8,11 +8,10 @@ import com.facebook.jni.HybridData
 class HermesRuntime {
 
     @VisibleForTesting
-    val hybridData: HybridData = nativeInitHybridData()
+    val mHybridData: HybridData = nativeInitHybridData()
 
     fun eval(script: String) = nativeEvaluateJavascript(script)
 
     private external fun nativeInitHybridData(): HybridData
-
     private external fun nativeEvaluateJavascript(script: String): Any
 }
