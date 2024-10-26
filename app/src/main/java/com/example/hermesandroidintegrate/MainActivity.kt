@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hermes.FbJniRunner
+import com.example.hermes.HermesAndroid
 import com.example.hermes.Runner
 
 class MainActivity : AppCompatActivity() {
@@ -31,9 +32,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        // Used to load the 'hermesandroidintegrate' library on application startup.
         init {
-            System.loadLibrary("hermesandroidintegrate")
+            HermesAndroid.load()
         }
     }
 }
