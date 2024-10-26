@@ -4,5 +4,7 @@
 
 #pragma once
 
+#include <fbjni/fbjni.h>
 
+using namespace facebook::jni;
 

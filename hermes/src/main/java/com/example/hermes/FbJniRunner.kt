@@ -2,11 +2,7 @@
 
 package com.example.hermes
 
-import android.util.Log
-
-private const val TAG = "FbJniRunner"
-
-class FbJniRunner {
+class FbJniRunner : NativeRunner {
 
     private val script = """
         function main() {
@@ -20,21 +16,14 @@ class FbJniRunner {
         throw Error("js error");
     """.trimIndent()
 
-    init {
-        nativeEval(script).let {
-            Log.d(TAG, "init: $it")
-        }
-
-        nativeEval(scriptError).let {
-            Log.d(TAG, "init: $it")
-        }
-
-        getStringHello().let {
-            Log.d(TAG, "get string from natve: $it")
-        }
+    override fun run() = buildString {
+        appendLine("FbJniRunner:")
+        appendLine(nativeEval(script))
+        appendLine(nativeEval(scriptError))
+        appendLine(getStringHello())
     }
 
-    val res:String get() = getStringHello()
+    val res: String get() = getStringHello()
 
     private external fun nativeEval(script: String): String
     private external fun getStringHello(): String

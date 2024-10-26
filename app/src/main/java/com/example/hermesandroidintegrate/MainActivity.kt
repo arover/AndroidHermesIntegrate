@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.hermes.FbJniRunner
 import com.example.hermes.HermesAndroid
-import com.example.hermes.Runner
+import com.example.hermes.HermesPlayground
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,14 +15,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(initView())
-        Runner()
-        val jniRun = FbJniRunner()
-        appendText(jniRun.res)
+        appendText(HermesPlayground.run())
     }
 
     private fun initView() =
         TextView(this).apply {
-            textSize = 50f
+            textSize = 20f
         }.also { textView = it }
 
     @SuppressLint("SetTextI18n")

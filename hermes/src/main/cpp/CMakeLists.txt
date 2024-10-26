@@ -33,6 +33,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 )
 
 include_directories(include)
+include_directories(include/demo)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/jsi/)
 

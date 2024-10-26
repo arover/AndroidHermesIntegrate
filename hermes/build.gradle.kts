@@ -51,8 +51,8 @@ android {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.facebook.fbjni/fbjni
-    implementation(libs.fbjni)
+    implementation(libs.fb.jni)
+    implementation(libs.fb.nativeloader)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

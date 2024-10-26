@@ -2,7 +2,7 @@
 
 package com.example.hermes
 
-class Runner {
+class Runner : NativeRunner {
 
     private val script = """
         function main() {
@@ -11,8 +11,8 @@ class Runner {
         main()
     """.trimIndent()
 
-    init {
-        eval(script)
+    override fun run(): String {
+        return "Simple Runner: ${eval(script)}"
     }
 
     private external fun eval(script: String): Int
