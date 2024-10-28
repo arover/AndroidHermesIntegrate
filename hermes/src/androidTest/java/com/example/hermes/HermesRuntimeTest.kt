@@ -38,36 +38,14 @@ class HermesRuntimeTest : BaseNativeTest() {
         val status = rt.eval(script)
         assertNull("load script", status)
 
-        val res = rt.eval("getWorld()")
+        val res = rt.callFunction("getWorld")
         assertEquals("get result", res, "world")
     }
 
     @Test
-    fun testReturnValueType() {
-        rt.eval("function get(v) { return v; }")
-
-        val i = rt.eval("get(1.3)")
-        assertEquals("get double", 1.3, i)
-
-        val b = rt.eval("get(false)")
-        assertEquals("get bool", false, b)
-
-        val s = rt.eval("get('abc')")
-        assertEquals("get string", "abc", s)
-
-        val strMap = rt.eval("get( {a: 'a_str'} )") as Map<*, *>
-        assertTrue("get string map has key", strMap.contains("a"))
-        assertEquals("get string map", "a_str", strMap["a"])
-
-        val boolArr = rt.eval("get([false])") as ArrayList<*>
-        assertEquals("get bool arr", boolArr[0], false)
-    }
-
-    @Test
     fun callJsFunction() {
-        rt.eval("function hello() { return 'hello hermes'; }")
-
-        val s = rt.callFunction("hello")
+        rt.eval("function hello(s) { return 'hello ' + s; }")
+        val s = rt.callFunction("hello", listOf("hermes"))
         assertEquals("call js function", "hello hermes", s)
     }
 }

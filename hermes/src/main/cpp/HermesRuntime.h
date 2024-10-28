@@ -38,5 +38,6 @@ private:
   };
 
   local_ref<JObject> evaluateJavascript(alias_ref<JString> script);
-  local_ref<JObject> callFunction(alias_ref<JString> methodName);
+  local_ref<JObject> callFunction(std::string methodName,
+                                  alias_ref<JList<JObject>> args);
 };

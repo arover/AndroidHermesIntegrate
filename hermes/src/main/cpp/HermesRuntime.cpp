@@ -28,9 +28,20 @@ HermesRuntime::evaluateJavascript(alias_ref<JString> script) {
   return jObjectFromValue(*rt, value);
 }
 
-local_ref<JObject> HermesRuntime::callFunction(alias_ref<JString> methodName) {
-  auto function = rt->global().getPropertyAsFunction(
-      *rt, methodName->toStdString().c_str());
-  auto value = function.call(*rt);
-  return jObjectFromValue(*rt, value);
+local_ref<JObject> HermesRuntime::callFunction(std::string methodName,
+                                               alias_ref<JList<JObject>> args) {
+  Function function =
+      rt->global().getPropertyAsFunction(*rt, methodName.c_str());
+
+  Array jsArgs(*rt, args->size());
+
+  int i = 0;
+  for (auto &elem : *args) {
+    auto value = valueFromJObject(*rt, elem);
+    jsArgs.setValueAtIndex(*rt, i, value);
+    i++;
+  }
+
+  Value res = function.call(*rt, jsArgs);
+  return jObjectFromValue(*rt, res);
 }
