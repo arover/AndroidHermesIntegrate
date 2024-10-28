@@ -3,6 +3,7 @@
 //
 
 #include "FbJniRunner.h"
+#include "ValueConverter.h"
 #include "runner.h"
 #include <fbjni/fbjni.h>
 #include <hermes/hermes.h>
@@ -10,14 +11,6 @@
 
 using namespace facebook::jni;
 using namespace facebook::jsi;
-
-void FbJniRunner::registerNatives() {
-  javaClassStatic()->registerNatives({
-      makeNativeMethod("nativeEval", FbJniRunner::nativeEval),
-      makeNativeMethod("getStringHello", FbJniRunner::getStringHello),
-      makeNativeMethod("testJsFunctionCall", FbJniRunner::testJsFunctionCall),
-  });
-}
 
 std::string FbJniRunner::nativeEval(alias_ref<FbJniRunner::javaobject>,
                                     const alias_ref<jstring> &script) {
@@ -46,6 +39,29 @@ std::string FbJniRunner::testJsFunctionCall(alias_ref<FbJniRunner::javaobject>,
   Function helloFunc = rt->global().getPropertyAsFunction(*rt, "hello");
 
   auto res = helloFunc.call(*rt, String::createFromUtf8(*rt, arg));
+
+  return res.getString(*rt).utf8(*rt);
+}
+
+std::string FbJniRunner::callFuncWithArgs(alias_ref<FbJniRunner::javaobject>,
+                                          std::string script,
+                                          std::string funcName,
+                                          alias_ref<JArrayList<JObject>> args) {
+  std::unique_ptr<Runtime> rt = facebook::hermes::makeHermesRuntime();
+
+  rt->evaluateJavaScript(std::make_unique<StringBuffer>(script),
+                         "callFuncWithArgs");
+
+  Function func = rt->global().getPropertyAsFunction(*rt, funcName.c_str());
+
+  Array jsArg(*rt, args->size());
+  int i = 0;
+  for (auto &elem : *args) {
+    auto value = valueFromJObject(*rt, elem);
+    jsArg.setValueAtIndex(*rt, i, value);
+    ++i;
+  }
+  Value res = func.call(*rt, jsArg);
 
   return res.getString(*rt).utf8(*rt);
 }

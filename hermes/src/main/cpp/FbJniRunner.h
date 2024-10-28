@@ -14,7 +14,14 @@ public:
   static constexpr const char *kJavaDescriptor =
       "Lcom/example/hermes/FbJniRunner;";
 
-  static void registerNatives();
+  static void registerNatives() {
+    javaClassStatic()->registerNatives({
+        makeNativeMethod("nativeEval", FbJniRunner::nativeEval),
+        makeNativeMethod("getStringHello", FbJniRunner::getStringHello),
+        makeNativeMethod("testJsFunctionCall", FbJniRunner::testJsFunctionCall),
+        makeNativeMethod("callFuncWithArgs", FbJniRunner::callFuncWithArgs),
+    });
+  }
 
 private:
   static std::string nativeEval(alias_ref<FbJniRunner::javaobject>,
@@ -24,4 +31,7 @@ private:
 
   static std::string testJsFunctionCall(alias_ref<FbJniRunner::javaobject>,
                                         std::string arg);
+  static std::string callFuncWithArgs(alias_ref<FbJniRunner::javaobject>,
+                                      std::string script, std::string funcName,
+                                      alias_ref<JArrayList<JObject>> args);
 };
