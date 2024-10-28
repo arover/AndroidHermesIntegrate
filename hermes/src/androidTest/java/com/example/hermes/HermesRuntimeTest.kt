@@ -62,4 +62,12 @@ class HermesRuntimeTest : BaseNativeTest() {
         val boolArr = rt.eval("get([false])") as ArrayList<*>
         assertEquals("get bool arr", boolArr[0], false)
     }
+
+    @Test
+    fun callJsFunction() {
+        rt.eval("function hello() { return 'hello hermes'; }")
+
+        val s = rt.callFunction("hello")
+        assertEquals("call js function", "hello hermes", s)
+    }
 }

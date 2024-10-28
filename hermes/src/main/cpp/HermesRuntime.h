@@ -22,7 +22,9 @@ public:
     });
 
     registerHybrid({makeNativeMethod("nativeEvaluateJavascript",
-                                     HermesRuntime::nativeEvaluateJavascript)});
+                                     HermesRuntime::nativeEvaluateJavascript),
+                    makeNativeMethod("nativeCallFunction",
+                                     HermesRuntime::nativeCallFunction)});
   }
 
 private:
@@ -37,4 +39,5 @@ private:
   };
 
   local_ref<JObject> nativeEvaluateJavascript(alias_ref<JString> script);
+  local_ref<JObject> nativeCallFunction(alias_ref<JString> methodName);
 };

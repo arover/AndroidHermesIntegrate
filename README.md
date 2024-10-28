@@ -10,7 +10,7 @@ Facebook Hermes javascript engine doesn't make for Android using out of box, thi
 - [x] Hermes runtime from Java/Kotlin
 - [x] evaluate js script
 - [x] get js return value
-- [ ] call js function
+- [ ] call js function, get js property
 - [ ] register Java/Kotlin function to runtime
 - [ ] maybe implement a setTimeout() for Hermes runtime
 

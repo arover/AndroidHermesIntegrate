@@ -27,3 +27,11 @@ HermesRuntime::nativeEvaluateJavascript(alias_ref<JString> script) {
 
   return jObjectFromValue(*rt, value);
 }
+
+local_ref<JObject>
+HermesRuntime::nativeCallFunction(alias_ref<JString> methodName) {
+  auto function = rt->global().getPropertyAsFunction(
+      *rt, methodName->toStdString().c_str());
+  auto value = function.call(*rt);
+  return jObjectFromValue(*rt, value);
+}
