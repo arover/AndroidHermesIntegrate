@@ -27,4 +27,5 @@ class FbJniRunner : NativeRunner {
 
     private external fun nativeEval(script: String): String
     private external fun getStringHello(): String
+    external fun testJsFunctionCall(arg: String): String
 }

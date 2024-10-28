@@ -21,4 +21,7 @@ private:
                                 const alias_ref<jstring> &script);
 
   static std::string getStringHello(alias_ref<FbJniRunner::javaobject>);
+
+  static std::string testJsFunctionCall(alias_ref<FbJniRunner::javaobject>,
+                                        std::string arg);
 };
