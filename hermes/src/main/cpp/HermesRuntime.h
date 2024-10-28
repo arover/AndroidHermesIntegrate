@@ -17,14 +17,13 @@ public:
 
   static void registerNatives() {
     javaClassStatic()->registerNatives({
-        makeNativeMethod("nativeInitHybridData",
-                         HermesRuntime::nativeInitHybridData),
+        makeNativeMethod("_initHybridData", HermesRuntime::initHybridData),
     });
 
-    registerHybrid({makeNativeMethod("nativeEvaluateJavascript",
-                                     HermesRuntime::nativeEvaluateJavascript),
-                    makeNativeMethod("nativeCallFunction",
-                                     HermesRuntime::nativeCallFunction)});
+    registerHybrid(
+        {makeNativeMethod("_evaluateJavascript",
+                          HermesRuntime::evaluateJavascript),
+         makeNativeMethod("_callFunction", HermesRuntime::callFunction)});
   }
 
 private:
@@ -34,10 +33,10 @@ private:
 
   HermesRuntime();
 
-  static local_ref<jhybriddata> nativeInitHybridData(alias_ref<JClass>) {
+  static local_ref<jhybriddata> initHybridData(alias_ref<JClass>) {
     return makeCxxInstance();
   };
 
-  local_ref<JObject> nativeEvaluateJavascript(alias_ref<JString> script);
-  local_ref<JObject> nativeCallFunction(alias_ref<JString> methodName);
+  local_ref<JObject> evaluateJavascript(alias_ref<JString> script);
+  local_ref<JObject> callFunction(alias_ref<JString> methodName);
 };

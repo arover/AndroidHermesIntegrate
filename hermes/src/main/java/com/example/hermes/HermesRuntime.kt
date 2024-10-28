@@ -1,4 +1,4 @@
-@file:Suppress("KotlinJniMissingFunction")
+@file:Suppress("KotlinJniMissingFunction", "FunctionName")
 
 package com.example.hermes
 
@@ -8,13 +8,12 @@ import com.facebook.jni.HybridData
 class HermesRuntime {
 
     @VisibleForTesting
-    val mHybridData: HybridData = nativeInitHybridData()
+    val mHybridData: HybridData = _initHybridData()
 
-    fun eval(script: String) = nativeEvaluateJavascript(script)
-    fun callFunction(funName: String): Any =
-        nativeCallFunction(funName)
+    fun eval(script: String) = _evaluateJavascript(script)
+    fun callFunction(funName: String): Any = _callFunction(funName)
 
-    private external fun nativeInitHybridData(): HybridData
-    private external fun nativeEvaluateJavascript(script: String): Any
-    private external fun nativeCallFunction(name: String): Any
+    private external fun _initHybridData(): HybridData
+    private external fun _evaluateJavascript(script: String): Any
+    private external fun _callFunction(name: String): Any
 }

@@ -19,7 +19,7 @@ HermesRuntime::HermesRuntime() {
 }
 
 local_ref<JObject>
-HermesRuntime::nativeEvaluateJavascript(alias_ref<JString> script) {
+HermesRuntime::evaluateJavascript(alias_ref<JString> script) {
   auto env = Environment::current();
   const char *nativeScript = env->GetStringUTFChars(script.get(), nullptr);
   auto value = rt->evaluateJavaScript(
@@ -28,8 +28,7 @@ HermesRuntime::nativeEvaluateJavascript(alias_ref<JString> script) {
   return jObjectFromValue(*rt, value);
 }
 
-local_ref<JObject>
-HermesRuntime::nativeCallFunction(alias_ref<JString> methodName) {
+local_ref<JObject> HermesRuntime::callFunction(alias_ref<JString> methodName) {
   auto function = rt->global().getPropertyAsFunction(
       *rt, methodName->toStdString().c_str());
   auto value = function.call(*rt);
