@@ -8,6 +8,7 @@
 #include <jsi/jsi.h>
 
 using namespace facebook::jni;
+using namespace facebook::jsi;
 
 struct HermesRuntime : public HybridClass<HermesRuntime> {
 public:
@@ -27,13 +28,13 @@ public:
 private:
   friend HybridBase;
   using HybridBase::HybridBase;
-  std::shared_ptr<facebook::jsi::Runtime> rt;
+  std::shared_ptr<Runtime> rt;
 
   HermesRuntime();
 
-  static local_ref<jhybriddata> nativeInitHybridData(alias_ref<jclass>) {
+  static local_ref<jhybriddata> nativeInitHybridData(alias_ref<JClass>) {
     return makeCxxInstance();
   };
 
-  local_ref<jobject> nativeEvaluateJavascript(alias_ref<jstring> script);
+  local_ref<JObject> nativeEvaluateJavascript(alias_ref<JString> script);
 };
