@@ -22,7 +22,9 @@ class HermesRuntime {
     fun getProperty(propName: String): Any = _getProperty(propName)
 
     private external fun _initHybridData(): HybridData
+
     private external fun _evaluateJavascript(script: String): Any
     private external fun _callFunction(name: String, args: List<Any>): Any
     private external fun _getProperty(propName: String): Any
+    private external fun _registerNativeFunction()
 }

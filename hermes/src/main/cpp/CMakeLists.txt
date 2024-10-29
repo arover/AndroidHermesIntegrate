@@ -30,6 +30,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         FbJniRunner.cpp
         OnLoad.cpp
         HermesRuntime.cpp
+        ValueConverter.cpp
 )
 
 include_directories(include)
