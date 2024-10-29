@@ -33,15 +33,15 @@ local_ref<JObject> HermesRuntime::callFunction(std::string methodName,
   Function function =
       rt->global().getPropertyAsFunction(*rt, methodName.c_str());
 
-  Array jsArgs(*rt, args->size());
+  Value jsArgs[args->size()];
 
   int i = 0;
   for (auto &elem : *args) {
     auto value = valueFromJObject(*rt, elem);
-    jsArgs.setValueAtIndex(*rt, i, value);
+    jsArgs[i] = std::move(value);
     i++;
   }
 
-  Value res = function.call(*rt, jsArgs);
+  Value res = function.call(*rt, jsArgs, args->size());
   return jObjectFromValue(*rt, res);
 }

@@ -13,10 +13,6 @@ class HermesRuntimeTypeTest : BaseNativeTest() {
     @Before
     fun each() {
         rt = HermesRuntime()
-
-        // TODO: 10/28/2024 when we call js function on runtime,
-        //  we passing a array that holds all arguments,
-        //  so this get function will return array indeed.
         rt.eval("function get(v) { return v; }")
     }
 
@@ -40,7 +36,7 @@ class HermesRuntimeTypeTest : BaseNativeTest() {
 
     @Test
     fun getMap() {
-        val strMap = rt.callFunction("get", listOf("{ a: 'a_str' }")) as Map<*, *>
+        val strMap = rt.callFunction("get", listOf(mapOf("a" to "a_str"))) as Map<*, *>
         assertTrue("get string map has key", strMap.contains("a"))
         assertEquals("get string map", "a_str", strMap["a"])
     }
