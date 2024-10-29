@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <JsCallback.h>
 #include <fbjni/fbjni.h>
 
 using namespace facebook::jni;
@@ -20,6 +21,7 @@ public:
         makeNativeMethod("getStringHello", FbJniRunner::getStringHello),
         makeNativeMethod("testJsFunctionCall", FbJniRunner::testJsFunctionCall),
         makeNativeMethod("callFuncWithArgs", FbJniRunner::callFuncWithArgs),
+        makeNativeMethod("evalWithCallback", FbJniRunner::evalWithCallback),
     });
   }
 
@@ -34,4 +36,8 @@ private:
   static std::string callFuncWithArgs(alias_ref<FbJniRunner::javaobject>,
                                       std::string script, std::string funcName,
                                       alias_ref<JArrayList<JObject>> args);
+  static local_ref<JObject> evalWithCallback(alias_ref<FbJniRunner::javaobject>,
+                                             std::string script,
+                                             std::string callbackName,
+                                             alias_ref<JsCallback> callback);
 };

@@ -29,4 +29,5 @@ class FbJniRunner : NativeRunner {
     private external fun getStringHello(): String
     external fun testJsFunctionCall(arg: String): String
     external fun callFuncWithArgs(script: String, func: String, args: ArrayList<Any>): String
+    external fun evalWithCallback(script: String, callbackName: String, cb: JsCallback): Any
 }
