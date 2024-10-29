@@ -30,11 +30,7 @@ class HermesRuntimeTest : BaseNativeTest() {
 
     @Test
     fun preloadScript() {
-        val script = """
-            function getWorld() {
-              return "world";
-            }
-        """.trimIndent()
+        val script = "function getWorld() { return 'world'; } "
         val status = rt.eval(script)
         assertNull("load script", status)
 
@@ -47,5 +43,13 @@ class HermesRuntimeTest : BaseNativeTest() {
         rt.eval("function hello(s) { return 'hello ' + s; }")
         val s = rt.callFunction("hello", listOf("hermes"))
         assertEquals("call js function", "hello hermes", s)
+    }
+
+    @Test
+    fun getJsProperty() {
+        rt.eval("var a = { b: false, c: 'cc' };")
+        val map = rt.getProperty("a") as Map<*, *>
+        assertTrue("bool", map["b"] == false)
+        assertTrue("string", map["c"] == "cc")
     }
 }

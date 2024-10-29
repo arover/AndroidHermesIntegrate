@@ -45,3 +45,8 @@ local_ref<JObject> HermesRuntime::callFunction(std::string methodName,
   Value res = function.call(*rt, jsArgs, args->size());
   return jObjectFromValue(*rt, res);
 }
+
+local_ref<JObject> HermesRuntime::getProperty(std::string propName) {
+  Value value = rt->global().getProperty(*rt, propName.c_str());
+  return jObjectFromValue(*rt, value);
+}
