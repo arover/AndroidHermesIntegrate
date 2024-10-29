@@ -67,6 +67,23 @@ std::string FbJniRunner::callFuncWithArgs(alias_ref<FbJniRunner::javaobject>,
   return res.getString(*rt).utf8(*rt);
 }
 
+static local_ref<JObject> getJObjectFromJsArgs(Runtime &rt, const Value *args,
+                                               size_t count) {
+  local_ref<JObject> res;
+  if (count == 0) {
+    res = nullptr;
+  } else if (count > 1) {
+    Array jsArr(rt, count);
+    for (int i = 0; i < count; i++) {
+      jsArr.setValueAtIndex(rt, i, args[i]);
+    }
+    res = jObjectFromValue(rt, std::move(jsArr));
+  } else {
+    res = jObjectFromValue(rt, args[0]);
+  }
+  return res;
+}
+
 local_ref<JObject>
 FbJniRunner::evalWithCallback(alias_ref<FbJniRunner::javaobject>,
                               std::string script, std::string callbackName,
@@ -78,18 +95,7 @@ FbJniRunner::evalWithCallback(alias_ref<FbJniRunner::javaobject>,
       [&callback](Runtime &rt, const Value &thisVal, const Value *args,
                   size_t count) -> Value {
     try {
-      local_ref<JObject> arg;
-      if (count == 0) {
-        arg = nullptr;
-      } else if (count > 1) {
-        Array jsArr(rt, count);
-        for (int i = 0; i < count; i++) {
-          jsArr.setValueAtIndex(rt, i, args[i]);
-        }
-        arg = jObjectFromValue(rt, std::move(jsArr));
-      } else {
-        arg = jObjectFromValue(rt, args[0]);
-      }
+      auto arg = getJObjectFromJsArgs(rt, args, count);
       callback->invoke(arg);
     } catch (JSIException &e) {
       throw std::runtime_error(e.what());
