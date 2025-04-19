@@ -7,6 +7,7 @@
 #include "NativeFunction.h"
 #include <fbjni/fbjni.h>
 #include <jsi/jsi.h>
+#include <unordered_map>
 
 using namespace facebook::jni;
 using namespace facebook::jsi;
@@ -34,6 +35,7 @@ private:
   friend HybridBase;
   using HybridBase::HybridBase;
   std::shared_ptr<Runtime> rt;
+  std::unordered_map<std::string, global_ref<NativeFunction>> nativeFunctions;
 
   HermesRuntime();
 

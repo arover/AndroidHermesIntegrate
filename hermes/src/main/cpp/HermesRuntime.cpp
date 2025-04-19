@@ -7,6 +7,7 @@
 #include <fbjni/fbjni.h>
 #include <hermes/hermes.h>
 #include <jsi/jsi.h>
+#include <vector>
 
 using namespace facebook::jni;
 using namespace facebook::jsi;
@@ -14,41 +15,67 @@ using namespace facebook::jsi;
 const char *TAG = "HermesRuntime";
 
 HermesRuntime::HermesRuntime() {
-  rt = facebook::hermes::makeHermesRuntime();
-  log_::loge(TAG, "HermesRuntime construct rt=%u", &rt);
+  try {
+    rt = facebook::hermes::makeHermesRuntime();
+    log_::loge(TAG, "HermesRuntime constructed successfully");
+  } catch (std::exception &e) {
+    log_::loge(TAG, "Error creating HermesRuntime: %s", e.what());
+    throw;
+  }
 }
 
 local_ref<JObject>
 HermesRuntime::evaluateJavascript(alias_ref<JString> script) {
-  auto env = Environment::current();
-  const char *nativeScript = env->GetStringUTFChars(script.get(), nullptr);
-  auto value = rt->evaluateJavaScript(
-      std::make_unique<StringBuffer>(nativeScript), "eval");
+  try {
+    auto env = Environment::current();
+    const char *nativeScript = env->GetStringUTFChars(script.get(), nullptr);
 
-  return jObjectFromValue(*rt, value);
+    auto value = rt->evaluateJavaScript(
+        std::make_unique<StringBuffer>(nativeScript), "eval");
+
+    env->ReleaseStringUTFChars(script.get(), nativeScript);
+
+    return jObjectFromValue(*rt, value);
+  } catch (std::exception &e) {
+    log_::loge(TAG, "Error evaluating JavaScript: %s", e.what());
+    throw;
+  }
 }
 
 local_ref<JObject> HermesRuntime::callFunction(std::string methodName,
                                                alias_ref<JList<JObject>> args) {
-  Function function =
-      rt->global().getPropertyAsFunction(*rt, methodName.c_str());
+  try {
+    Function function =
+        rt->global().getPropertyAsFunction(*rt, methodName.c_str());
 
-  Value jsArgs[args->size()];
+    Value jsArgs[args->size()];
 
-  int i = 0;
-  for (auto &elem : *args) {
-    auto value = valueFromJObject(*rt, elem);
-    jsArgs[i] = std::move(value);
-    i++;
+    int i = 0;
+    for (auto &elem : *args) {
+      auto value = valueFromJObject(*rt, elem);
+      jsArgs[i] = std::move(value);
+      i++;
+    }
+
+    Value res = function.call(*rt, jsArgs, args->size());
+    return jObjectFromValue(*rt, res);
+  } catch (std::exception &e) {
+    log_::loge(TAG, "Error calling function %s: %s", methodName.c_str(),
+               e.what());
+    throw;
   }
-
-  Value res = function.call(*rt, jsArgs, args->size());
-  return jObjectFromValue(*rt, res);
 }
 
 local_ref<JObject> HermesRuntime::getProperty(std::string propName) {
-  Value value = rt->global().getProperty(*rt, propName.c_str());
-  return jObjectFromValue(*rt, value);
+  try {
+    Value value = rt->global().getProperty(*rt, propName.c_str());
+
+    return jObjectFromValue(*rt, value);
+  } catch (std::exception &e) {
+    log_::loge(TAG, "Error getting property %s: %s", propName.c_str(),
+               e.what());
+    throw;
+  }
 }
 
 static local_ref<JObject> getJObjectFromJsArgs(Runtime &rt, const Value *args,
@@ -70,33 +97,46 @@ static local_ref<JObject> getJObjectFromJsArgs(Runtime &rt, const Value *args,
 
 bool HermesRuntime::registerNativeFunc(const std::string &name,
                                        alias_ref<NativeFunction> func) {
-  auto const globalFunc = make_global(func);
+  try {
+    auto globalFunc = make_global(func);
 
-  HostFunctionType myHostFunction =
-      [globalFunc](Runtime &rt, const Value &thisVal, const Value *args,
-                   size_t count) -> Value {
-    try {
-      auto arrayList = JArrayList<JObject>::create(count);
+    nativeFunctions[name] = std::move(globalFunc);
 
-      for (size_t i = 0; i < count; i++) {
-        arrayList->add(jObjectFromValue(rt, args[i]));
+    log_::loge(TAG, "registered#%d %s", nativeFunctions.size(), name.c_str());
+
+    HostFunctionType myHostFunction =
+        [this, name](Runtime &rt, const Value &thisVal, const Value *args,
+                     size_t count) -> Value {
+      try {
+        auto it = nativeFunctions.find(name);
+        if (it == nativeFunctions.end()) {
+          throw JSError(rt, "Native function not found: " + name);
+        }
+
+        auto arrayList = JArrayList<JObject>::create(count);
+        for (size_t i = 0; i < count; i++) {
+          arrayList->add(jObjectFromValue(rt, args[i]));
+        }
+
+        auto result = it->second->invoke(arrayList);
+
+        if (result == nullptr) {
+          return Value::undefined();
+        }
+        return valueFromJObject(rt, result);
+      } catch (std::exception &e) {
+        throw JSError(rt, e.what());
       }
+    };
 
-      auto result = globalFunc->invoke(arrayList);
+    auto funcName = PropNameID::forAscii(*rt, name);
+    rt->global().setProperty(
+        *rt, funcName,
+        Function::createFromHostFunction(*rt, funcName, 0, myHostFunction));
 
-      if (result == nullptr) {
-        return Value::undefined();
-      }
-      return valueFromJObject(rt, result);
-    } catch (std::exception &e) {
-      throw JSError(rt, e.what());
-    }
-  };
-
-  auto funcName = PropNameID::forAscii(*rt, name);
-  rt->global().setProperty(
-      *rt, funcName,
-      Function::createFromHostFunction(*rt, funcName, 1, myHostFunction));
-
-  return true;
+    return true;
+  } catch (std::exception &e) {
+    log_::loge(TAG, "Error registering native function: %s", e.what());
+    return true;
+  }
 }

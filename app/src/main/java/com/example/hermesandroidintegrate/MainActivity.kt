@@ -18,13 +18,31 @@ class MainActivity : AppCompatActivity() {
 
         val rt = HermesRuntime()
 
-        rt.registerFunction("hello", object : NativeFunction {
+//        rt.registerFunction("hello", object : NativeFunction {
+//            override fun invoke(args: List<*>): Any {
+//                return "hello from kotlin ${args.joinToString()}"
+//            }
+//        })
+//        rt.eval("var a = hello('a','b');")
+//        appendText(rt.getProperty("a").toString())
+
+        rt.registerFunction("getBoolean", object : NativeFunction {
             override fun invoke(args: List<*>): Any {
-                return "hello from kotlin ${args.joinToString()}"
+                return false
             }
         })
-        rt.eval("var a = hello('a','b');")
-        appendText(rt.getProperty("a").toString())
+        val b = rt.callFunction("getBoolean")
+        appendText(b.toString())
+
+        rt.registerFunction("getFloat", object : NativeFunction {
+            override fun invoke(args: List<*>): Any {
+                return 1.2
+            }
+        })
+
+        // TODO: 4/19/2025 call second registered function will crash
+//        rt.callFunction("getFloat").also { appendText(it.toString()) }
+//        rt.callFunction("getFloat").also { appendText(it.toString()) }
 
     }
 
