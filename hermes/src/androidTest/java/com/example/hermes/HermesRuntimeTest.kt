@@ -52,4 +52,12 @@ class HermesRuntimeTest : BaseNativeTest() {
         assertTrue("bool", map["b"] == false)
         assertTrue("string", map["c"] == "cc")
     }
+
+    @Test
+    fun testRegisterNativeFunction() {
+        rt.eval("var r = hello('a','b');")
+        val r = rt.getProperty("r") as String
+        assertEquals(r, "hello 2")
+    }
+
 }

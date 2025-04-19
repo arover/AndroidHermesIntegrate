@@ -50,3 +50,53 @@ local_ref<JObject> HermesRuntime::getProperty(std::string propName) {
   Value value = rt->global().getProperty(*rt, propName.c_str());
   return jObjectFromValue(*rt, value);
 }
+
+static local_ref<JObject> getJObjectFromJsArgs(Runtime &rt, const Value *args,
+                                               size_t count) {
+  local_ref<JObject> res;
+  if (count == 0) {
+    res = nullptr;
+  } else if (count > 1) {
+    Array jsArr(rt, count);
+    for (int i = 0; i < count; i++) {
+      jsArr.setValueAtIndex(rt, i, args[i]);
+    }
+    res = jObjectFromValue(rt, std::move(jsArr));
+  } else {
+    res = jObjectFromValue(rt, args[0]);
+  }
+  return res;
+}
+
+bool HermesRuntime::registerNativeFunc(const std::string &name,
+                                       alias_ref<NativeFunction> func) {
+  auto const globalFunc = make_global(func);
+
+  HostFunctionType myHostFunction =
+      [globalFunc](Runtime &rt, const Value &thisVal, const Value *args,
+                   size_t count) -> Value {
+    try {
+      auto arrayList = JArrayList<JObject>::create(count);
+
+      for (size_t i = 0; i < count; i++) {
+        arrayList->add(jObjectFromValue(rt, args[i]));
+      }
+
+      auto result = globalFunc->invoke(arrayList);
+
+      if (result == nullptr) {
+        return Value::undefined();
+      }
+      return valueFromJObject(rt, result);
+    } catch (std::exception &e) {
+      throw JSError(rt, e.what());
+    }
+  };
+
+  auto funcName = PropNameID::forAscii(*rt, name);
+  rt->global().setProperty(
+      *rt, funcName,
+      Function::createFromHostFunction(*rt, funcName, 1, myHostFunction));
+
+  return true;
+}

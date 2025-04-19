@@ -12,9 +12,8 @@ class HermesRuntime {
 
     fun eval(script: String) = _evaluateJavascript(script)
 
-    // TODO: 10/28/2024 vararg will erase arg type that passing to jni, Why
-    // fun callFunction(funName: String, vararg arg: Any): Any =
-    //     _callFunction(funName, listOf(arg))
+    fun registerFunction(name: String, func: NativeFunction) =
+        _registerNativeFunc(name, func)
 
     fun callFunction(funName: String, args: List<Any> = listOf()): Any =
         _callFunction(funName, args)
@@ -26,5 +25,5 @@ class HermesRuntime {
     private external fun _evaluateJavascript(script: String): Any
     private external fun _callFunction(name: String, args: List<Any>): Any
     private external fun _getProperty(propName: String): Any
-    private external fun _registerNativeFunction()
+    private external fun _registerNativeFunc(name: String, funcRef: NativeFunction): Boolean
 }

@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hermes.HermesAndroid
-import com.example.hermes.HermesPlayground
+import com.example.hermes.HermesRuntime
+import com.example.hermes.NativeFunction
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,7 +16,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(initView())
-        appendText(HermesPlayground.run())
+
+        val rt = HermesRuntime()
+
+        rt.registerFunction("hello", object : NativeFunction {
+            override fun invoke(args: List<*>): Any {
+                return "hello from kotlin ${args.joinToString()}"
+            }
+        })
+        rt.eval("var a = hello('a','b');")
+        appendText(rt.getProperty("a").toString())
+
     }
 
     private fun initView() =
