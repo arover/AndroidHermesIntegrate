@@ -1,5 +1,8 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-deploymentTargetSelector.xml
-androidTestResultsUserPreferences.xml
+*
+
+!codeStyles
+!kotlinc.xml
+!vcs.xml
+!migrations.xml
+!.gitignore
+!compiler.xml
