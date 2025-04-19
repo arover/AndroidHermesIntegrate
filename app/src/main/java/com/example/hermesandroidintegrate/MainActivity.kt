@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.hermes.HermesAndroid
 import com.example.hermes.HermesRuntime
 import com.example.hermes.NativeFunction
 
@@ -39,9 +38,4 @@ class MainActivity : AppCompatActivity() {
         text = "$text\n$t"
     }
 
-    companion object {
-        init {
-            HermesAndroid.load()
-        }
-    }
 }
