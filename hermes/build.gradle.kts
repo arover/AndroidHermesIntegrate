@@ -16,7 +16,6 @@ android {
         ndk {
             abiFilters += listOf("arm64-v8a", "x86_64")
         }
-        @Suppress("UnstableApiUsage")
         externalNativeBuild {
             cmake {
                 arguments("-DANDROID_STL=c++_shared")
@@ -29,13 +28,6 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
     externalNativeBuild {
         cmake {
@@ -53,15 +45,16 @@ android {
             "**/libfbjni.so"
         )
     }
+
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
     implementation(libs.fb.jni)
     implementation(libs.fb.nativeloader)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

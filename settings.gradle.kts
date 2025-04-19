@@ -1,8 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":hermes")
-
-
 pluginManagement {
     repositories {
         google {
@@ -26,3 +23,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "HermesAndroidIntegrate"
 include(":app")
+include(":hermes")
+include(":hermes-test")
