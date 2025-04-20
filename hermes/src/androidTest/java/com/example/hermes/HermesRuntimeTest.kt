@@ -65,4 +65,23 @@ class HermesRuntimeTest : BaseNativeTest() {
         assertEquals(r, "hello 2")
     }
 
+    @Test
+    fun registerMultiNativeFunction() {
+        rt.registerFunction("hello", object : NativeFunction {
+            override fun invoke(args: List<*>): Any {
+                return "hello ${args.size}"
+            }
+        })
+        rt.registerFunction("hello2", object : NativeFunction {
+            override fun invoke(args: List<*>): Any {
+                return "hello ${args.size}"
+            }
+        })
+        rt.eval("var r = hello('a','b');")
+        rt.eval("var r2 = hello2('a','b');")
+        val r = rt.getProperty("r") as String
+        assertEquals(r, "hello 2")
+        val r2 = rt.getProperty("r2") as String
+        assertEquals(r2, r)
+    }
 }

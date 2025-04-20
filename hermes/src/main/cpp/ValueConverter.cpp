@@ -69,7 +69,11 @@ local_ref<JObject> jObjectFromValue(Runtime &runtime, const Value &value) {
     return JDouble::valueOf(value.getNumber());
 
   } else if (value.isString()) {
-    return make_jstring(value.getString(runtime).utf8(runtime));
+      return make_jstring(value.getString(runtime).utf8(runtime));
+
+  } else if (value.isObject()) {
+      auto isFunction = value.asObject(runtime).isFunction(runtime);
+      return make_jstring(std::string("property is ") + (isFunction ? "function" : "object"));
 
   } else {
     Object obj = value.getObject(runtime);

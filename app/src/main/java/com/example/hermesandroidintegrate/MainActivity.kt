@@ -34,11 +34,14 @@ class MainActivity : AppCompatActivity() {
         val b = rt.callFunction("getBoolean")
         appendText(b.toString())
 
+        rt.getProperty("getBoolean").also { appendText("getBoolean: $it") }
+
         rt.registerFunction("getFloat", object : NativeFunction {
             override fun invoke(args: List<*>): Any {
                 return 1.2
             }
         })
+        rt.callFunction("getBoolean").also { appendText(it.toString()) }
 
         // TODO: 4/19/2025 call second registered function will crash
 //        rt.callFunction("getFloat").also { appendText(it.toString()) }

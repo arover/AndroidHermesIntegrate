@@ -112,6 +112,7 @@ bool HermesRuntime::registerNativeFunc(const std::string &name,
         if (it == nativeFunctions.end()) {
           throw JSError(rt, "Native function not found: " + name);
         }
+        log_::loge(TAG, "called %s %p", name.c_str(), (void*)it->second.get());
 
         auto arrayList = JArrayList<JObject>::create(count);
         for (size_t i = 0; i < count; i++) {
@@ -132,11 +133,11 @@ bool HermesRuntime::registerNativeFunc(const std::string &name,
     auto funcName = PropNameID::forAscii(*rt, name);
     rt->global().setProperty(
         *rt, funcName,
-        Function::createFromHostFunction(*rt, funcName, 0, myHostFunction));
+        Function::createFromHostFunction(*rt, funcName, 1, myHostFunction));
 
     return true;
   } catch (std::exception &e) {
     log_::loge(TAG, "Error registering native function: %s", e.what());
-    return true;
+    return false;
   }
 }
