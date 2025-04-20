@@ -3,6 +3,7 @@ package com.example.hermes
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -54,6 +55,13 @@ class HermesRuntimeTest : BaseNativeTest() {
     }
 
     @Test
+    fun getJsPropertyFunction() {
+        rt.eval("function a() { console.log('a'); }")
+        val func = rt.getProperty("a") as String
+        assertEquals(func,"Property is function")
+    }
+
+    @Test
     fun testRegisterNativeFunction() {
         rt.registerFunction("hello", object : NativeFunction {
             override fun invoke(args: List<*>): Any {
@@ -74,14 +82,28 @@ class HermesRuntimeTest : BaseNativeTest() {
         })
         rt.registerFunction("hello2", object : NativeFunction {
             override fun invoke(args: List<*>): Any {
-                return "hello ${args.size}"
+                return 1.2
             }
         })
         rt.eval("var r = hello('a','b');")
         rt.eval("var r2 = hello2('a','b');")
         val r = rt.getProperty("r") as String
         assertEquals(r, "hello 2")
-        val r2 = rt.getProperty("r2") as String
-        assertEquals(r2, r)
+        val r2 = rt.getProperty("r2") as Double
+        assertEquals(r2, 1.2, 0.001)
     }
+
+    @Test
+    fun nativeFunctionReturnType() {
+        rt.registerFunction("addNumber", object : NativeFunction {
+            override fun invoke(args: List<*>): Any {
+                return args.map { it.toString().toDouble() }.sum()
+            }
+        })
+        rt.eval("var r = addNumber(1,2,3);")
+        val r = rt.getProperty("r") as Double
+        assertEquals("add double", r, 6.0, 0.001)
+    }
+
+
 }

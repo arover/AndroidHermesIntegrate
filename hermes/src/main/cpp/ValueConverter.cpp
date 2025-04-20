@@ -71,10 +71,6 @@ local_ref<JObject> jObjectFromValue(Runtime &runtime, const Value &value) {
   } else if (value.isString()) {
       return make_jstring(value.getString(runtime).utf8(runtime));
 
-  } else if (value.isObject()) {
-      auto isFunction = value.asObject(runtime).isFunction(runtime);
-      return make_jstring(std::string("property is ") + (isFunction ? "function" : "object"));
-
   } else {
     Object obj = value.getObject(runtime);
 
@@ -93,7 +89,8 @@ local_ref<JObject> jObjectFromValue(Runtime &runtime, const Value &value) {
       return jList;
 
     } else if (obj.isFunction(runtime)) {
-      throw JSError(runtime, "JS Functions are not convertible to JObject");
+      return make_jstring("Property is function");
+//      throw JSError(runtime, "JS Functions are not convertible to JObject");
 
     } else {
       static auto hashmapClass = JHashMap<JString, JObject>::javaClassStatic();
