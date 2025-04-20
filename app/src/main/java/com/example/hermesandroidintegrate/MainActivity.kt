@@ -43,9 +43,8 @@ class MainActivity : AppCompatActivity() {
         })
         rt.callFunction("getBoolean").also { appendText(it.toString()) }
 
-        // TODO: 4/19/2025 call second registered function will crash
-//        rt.callFunction("getFloat").also { appendText(it.toString()) }
-//        rt.callFunction("getFloat").also { appendText(it.toString()) }
+        rt.callFunction("getFloat").also { appendText(it.toString()) }
+        rt.callFunction("getFloat").also { appendText(it.toString()) }
 
     }
 

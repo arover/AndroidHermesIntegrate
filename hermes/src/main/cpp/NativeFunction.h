@@ -14,10 +14,15 @@ struct NativeFunction : JavaClass<NativeFunction> {
 
   static auto constexpr kJavaDescriptor = "Lcom/example/hermes/NativeFunction;";
 
-  [[nodiscard]] local_ref<JObject>
-  invoke(const alias_ref<JList<JObject>> &args) const {
-    static const auto method =
-        getClass()->getMethod<jobject(alias_ref<JList<JObject>>)>("invoke");
-    return method(self(), args);
-  }
+    [[nodiscard]] local_ref<JObject> invoke(alias_ref<JList<JObject>> args) const {
+        // need package class reference
+        auto kJavaInterface = "com/example/hermes/NativeFunction";
+        // get interface
+        static const auto interfaceClass = findClassStatic(kJavaInterface);
+        // get method from interface not class
+        static const auto method = interfaceClass->getMethod<jobject(alias_ref<JList<JObject>>)>("invoke");
+
+        return method(self(), args);
+    }
+
 };
