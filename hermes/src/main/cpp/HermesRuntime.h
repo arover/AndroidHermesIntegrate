@@ -23,12 +23,12 @@ public:
     });
 
     registerHybrid(
-        {makeNativeMethod("_evaluateJavascript",
-                          HermesRuntime::evaluateJavascript),
-         makeNativeMethod("_callFunction", HermesRuntime::callFunction),
-         makeNativeMethod("_getProperty", HermesRuntime::getProperty),
-         makeNativeMethod("_registerNativeFunc",
-                          HermesRuntime::registerNativeFunc)});
+        {
+            makeNativeMethod("_evaluateJavascript", HermesRuntime::evaluateJavascript),
+            makeNativeMethod("_callFunction", HermesRuntime::callFunction),
+            makeNativeMethod("_getProperty", HermesRuntime::getProperty),
+            makeNativeMethod("_registerNativeFunc",HermesRuntime::registerNativeFunc)
+        });
   }
 
 private:
@@ -44,9 +44,7 @@ private:
   };
 
   local_ref<JObject> evaluateJavascript(alias_ref<JString> script);
-  local_ref<JObject> callFunction(std::string methodName,
-                                  alias_ref<JList<JObject>> args);
+  local_ref<JObject> callFunction(std::string methodName, alias_ref<JList<JObject>> args);
   local_ref<JObject> getProperty(std::string propName);
-  bool registerNativeFunc(const std::string &name,
-                          alias_ref<NativeFunction> func);
+  bool registerNativeFunc(const std::string &name, alias_ref<NativeFunction> func);
 };

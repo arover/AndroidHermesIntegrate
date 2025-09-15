@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 rootProject.name = "HermesAndroidIntegrate"
 include(":app")
 include(":hermes")
-include(":hermes-test")
+//include(":hermes-test")
